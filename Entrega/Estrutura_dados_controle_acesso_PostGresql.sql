@@ -62,7 +62,7 @@ COMMENT ON COLUMN public.cidades.cod_siafi
 
 CREATE TABLE public.bairros
 (
-    id_bairros integer NOT NULL,
+    id_bairros integer NOT NULL DEFAULT nextval('table_BAIRO_id_BAIRRO'),
     id_cidades integer NOT NULL,
     nome varchar(50) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT bairros_pkey PRIMARY KEY (id_bairros),

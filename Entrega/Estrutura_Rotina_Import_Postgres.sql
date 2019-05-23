@@ -201,5 +201,75 @@ from TEMP_PONTO05_A,
      jsonb_array_elements(conteudo) AS info(data);
 
 
+--//////////---/////////////////////////--////////////////////////////--
 
+COPY ESTADOS
+(
+	id_estados,
+	nome,
+	uf
+)
+FROM 'C:/Tabela_Estados.csv'
+DELIMITER ';'
+CSV HEADER;
+
+--//////////---/////////////////////////--////////////////////////////--
+
+COPY TEMP_CIDADE
+(
+	CODIGO,
+	SIAFI,
+	NOME,
+	UF
+)
+FROM 'C:/Tabela_Municipios_SIAFI.csv'
+DELIMITER ';'
+CSV HEADER;
+
+--/////////////////--------//////////////////////////
+
+INSERT INTO CIDADES
+SELECT
+	CID.CODIGO,
+	EST.id_estados,
+	CID.NOME,
+	CID.SIAFI	
+FROM TEMP_CIDADE AS CID
+LEFT JOIN ESTADOS EST
+ON ( EST.UF = CID.UF);
+
+---///////////////////////--/////////////////////////
+
+SELECT DISTINCT
+	CID.id_cidades,
+	BAIRRO
+FROM 
+(
+ SELECT DISTINCT
+	bairro,
+	cidade
+ FROM TEMP_PONTO01
+UNION
+ SELECT DISTINCT
+	bairro,
+	cidade
+ FROM TEMP_PONTO02
+UNION
+ SELECT DISTINCT
+	bairro,
+	cidade
+ FROM TEMP_PONTO03
+UNION
+ SELECT DISTINCT
+	bairro,
+	cidade
+ FROM TEMP_PONTO04
+UNION
+ SELECT DISTINCT
+	bairro,
+	cidade
+ FROM TEMP_PONTO05
+) BAI
+LEFT JOIN cidades CID
+ON (LOWER(retira_acentuacao(BAI.CIDADE)) = LOWER(CID.NOME));
 
