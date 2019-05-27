@@ -1,0 +1,23 @@
+
+COPY TEMP_CIDADE
+(
+	CODIGO,
+	SIAFI,
+	NOME,
+	UF
+)
+FROM 'C:/Tabela_Municipios_SIAFI.csv'
+DELIMITER ';'
+CSV HEADER;
+
+--/////////////////--------//////////////////////////
+
+INSERT INTO CIDADES
+SELECT
+	CID.CODIGO,
+	EST.id_estados,
+	CID.NOME,
+	CID.SIAFI	
+FROM TEMP_CIDADE AS CID
+LEFT JOIN ESTADOS EST
+ON ( EST.UF = CID.UF);
